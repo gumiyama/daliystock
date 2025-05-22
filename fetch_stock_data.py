@@ -102,38 +102,56 @@ def fetch_and_save_stock_data(stock_code, data_directory="stock_data"):
     except Exception as e:
         print(f"Error saving data for {stock_code} to {file_path}: {e}")
 
-def main():
+def main(specific_tickers=None):
     """
     Main function to orchestrate fetching stock codes and their historical data.
+
+    Args:
+        specific_tickers (list, optional): A list of ticker symbols (e.g., ["7203.T"])
+                                           to fetch. If None, fetches all JPX codes.
+                                           Defaults to None.
     """
     print("Starting the stock data fetching process...")
     
-    stock_codes = get_stock_codes()
-    
-    if not stock_codes:
-        print("No stock codes retrieved. Exiting.")
+    stock_codes_to_process = []
+
+    if specific_tickers is not None:
+        if isinstance(specific_tickers, list) and all(isinstance(t, str) for t in specific_tickers):
+            stock_codes_to_process = specific_tickers
+            print(f"Processing a specific list of {len(stock_codes_to_process)} tickers.")
+        else:
+            print("Error: specific_tickers argument must be a list of strings. Exiting.")
+            return
+    else:
+        print("No specific tickers provided, fetching all available JPX stock codes.")
+        stock_codes_to_process = get_stock_codes()
+        if not stock_codes_to_process:
+            print("No stock codes retrieved from JPX. Exiting.")
+            return
+        print(f"Found {len(stock_codes_to_process)} stock codes from JPX to process.")
+
+    if not stock_codes_to_process: # Final check if list is empty
+        print("No stock codes to process. Exiting.")
         return
         
-    total_codes = len(stock_codes)
-    print(f"Found {total_codes} stock codes to process.")
+    total_to_process = len(stock_codes_to_process)
     
-    # For demonstration, let's process only a small subset.
-    # Remove or adjust `[:N]` for full processing.
-    # stock_codes_to_process = stock_codes[:5] 
-    # print(f"Processing the first {len(stock_codes_to_process)} codes for this run.")
-
-    # print(f"Processing the first {len(stock_codes_to_process)} codes for this run.")
-
-    # For full run, use:
-    stock_codes_to_process = stock_codes
-
     for i, code in enumerate(stock_codes_to_process):
-        print(f"\nProcessing stock {i+1} of {len(stock_codes_to_process)}: {code}")
+        print(f"\nProcessing stock {i+1} of {total_to_process}: {code}")
         fetch_and_save_stock_data(code, data_directory="stock_data")
-        # Optional: Add a small delay to avoid overwhelming the server, though yfinance usually handles this.
+        # Optional: Add a small delay to avoid overwhelming the server
         # time.sleep(0.1) 
         
     print("\nAll stock data processing complete.")
 
 if __name__ == "__main__":
-    main()
+    # Set this list to None to fetch all stocks
+    # tickers_to_fetch = None 
+    tickers_to_fetch = ["7203.T", "9984.T", "INVALID.T"] # Example with specific (and one invalid) tickers
+
+    if tickers_to_fetch:
+        print(f"--- Running fetch_stock_data.py for a specific list of {len(tickers_to_fetch)} tickers ---")
+        main(specific_tickers=tickers_to_fetch)
+    else:
+        print("--- Running fetch_stock_data.py for all available JPX stock codes ---")
+        main()
