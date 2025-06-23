@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>銘柄監視画面</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>銘柄監視ダッシュボード</h1>
+    </header>
+
+    <div class="container">
+        <div class="tab-container">
+            <!-- タブはここに動的に追加されます -->
+            <button class="tab-button active" data-ticker="AAPL">AAPL</button>
+            <button class="tab-button" data-ticker="MSFT">MSFT</button>
+            <button class="tab-button" data-ticker="GOOGL">GOOGL</button>
+        </div>
+
+        <div class="content-container">
+            <div class="chart-area">
+                <canvas id="stockChart"></canvas>
+            </div>
+            <div class="info-area">
+                <h2>銘柄情報</h2>
+                <p id="ticker-name">銘柄名: -</p>
+                <p id="current-price">現在値: -</p>
+                <p id="previous-close">前日終値: -</p>
+            </div>
+        </div>
+
+        <div class="add-stock-area">
+            <input type="text" id="new-ticker-input" placeholder="銘柄コード (例: 7203.T)">
+            <button id="add-ticker-button">銘柄追加</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

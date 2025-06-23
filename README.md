@@ -1,107 +1,122 @@
-# Stock Pattern Suggester
+# 銘柄監視ダッシュボード
 
-## Overview
-This project analyzes historical stock data for publicly traded companies on the Japanese stock market (JPX) to identify time-based patterns. It aims to suggest potential buying opportunities for the next business day based on these historical trends. The suggestions are presented through a simple Graphical User Interface (GUI).
+シンプルな銘柄監視ウェブアプリケーションです。Python (Flask) をバックエンドAPIサーバーとして使用し、yfinanceライブラリ経由で株価データを取得します。フロントエンドはHTML、CSS、JavaScriptで構築されており、Chart.jsを使用して株価チャートを動的に表示します。ユーザーは監視したい銘柄をタブ形式で追加・管理できます。
 
-## Features
-*   Fetches and updates historical stock data for JPX-listed companies (from Yahoo Finance via `yfinance`).
-*   Identifies potential buying patterns based on:
-    *   **Day of the week:** e.g., buy on Monday, sell N trading days later.
-    *   **Week of the year:** e.g., buy in week X, sell Y weeks later.
-    *   **Month of the year:** e.g., buy in month M, sell N months later.
-    *   **Quarter of the year:** e.g., buy in quarter Q, sell P quarters later.
-*   Provides a GUI (`stock_suggester_gui.py`) to display actionable suggestions for the next calculated business day.
-*   Includes command-line interfaces for data fetching (`fetch_stock_data.py`) and analysis (`main_analyzer.py`).
-*   Handles Japanese holidays to accurately determine business days.
-*   Unit tests for core logic modules (`market_utils.py`, `pattern_analyzer.py`).
+## 機能
 
-## Project Structure
-*   `fetch_stock_data.py`: Script to download historical stock data for JPX-listed companies. Can fetch all or specific tickers. Performs differential updates.
-*   `data_utils.py`: Utility functions to load and preprocess stock data from CSV files, including adding time-based features.
-*   `market_utils.py`: Handles market-specific logic, primarily for determining Japanese holidays and calculating the next business day.
-*   `pattern_analyzer.py`: Contains the core logic for analyzing historical data to find day-of-week, weekly, monthly, and quarterly patterns.
-*   `main_analyzer.py`: Orchestrates the analysis by using the other utility and analyzer modules. It provides suggestions via a command-line interface and is also used by the GUI.
-*   `stock_suggester_gui.py`: The Tkinter-based GUI application that presents stock suggestions.
-*   `tests/`: Directory containing unit tests.
-    *   `test_market_utils.py`: Tests for holiday and business day calculations.
-    *   `test_pattern_analyzer.py`: Tests for the pattern analysis functions.
-*   `stock_data/`: Default directory where downloaded CSV stock data files are stored. Each file is named `{TickerSymbol}.csv`.
-*   `.gitignore`: Specifies intentionally untracked files that Git should ignore.
-*   `README.md`: This file.
+*   指定した銘柄の過去1年間の株価チャート（終値）を表示
+*   銘柄の基本情報（銘柄名、現在値、前日終値）を表示
+*   タブによる複数銘柄の管理
+*   ユーザーによる監視銘柄の動的な追加
+*   レスポンシブデザイン（基本的な対応）
+*   データ取得エラー時の適切なフィードバック
 
-## Setup & Installation
-1.  **Python:** Ensure you have Python 3.x installed (developed with Python 3.10+).
-2.  **Libraries:** Install the required Python libraries. A `requirements.txt` file is not yet provided, but you can install them using pip:
+## スクリーンショット
+
+(ここにアプリケーションのスクリーンショットを挿入できます。例: `![App Screenshot](screenshot.png)`)
+
+## 技術スタック
+
+*   **バックエンド:**
+    *   Python 3
+    *   Flask (Webフレームワーク)
+    *   yfinance (株価データ取得)
+    *   pandas
+*   **フロントエンド:**
+    *   HTML5
+    *   CSS3
+    *   JavaScript (ES6+)
+    *   Chart.js (チャート描画ライブラリ)
+*   **その他:**
+    *   pip (Pythonパッケージ管理)
+
+## セットアップと実行方法
+
+### 前提条件
+
+*   Python 3.8 以降がインストールされていること
+*   pip (Pythonのパッケージインストーラー) が利用可能であること
+*   ウェブブラウザ (Google Chrome, Firefox など)
+
+### 1. リポジトリのクローン (またはファイルのダウンロード)
+
+リポジトリをクローンするか、提供されたファイル (`app.py`, `index.html`, `script.js`, `style.css`, `requirements.txt`) を任意のディレクトリに配置します。
+
+```bash
+# 例: git clone https://github.com/your-username/stock-dashboard.git
+# cd stock-dashboard
+```
+
+### 2. Python仮想環境の作成と有効化 (推奨)
+
+プロジェクトのルートディレクトリで以下のコマンドを実行します。
+
+```bash
+python -m venv venv
+```
+
+*   Windowsの場合:
     ```bash
-    pip install pandas yfinance holidays jpx_data_utils # jpx_data_utils is for an alternative get_stock_codes
+    .\venv\Scripts\activate
     ```
-    *   `pandas`: For data manipulation and analysis.
-    *   `yfinance`: To download historical stock market data from Yahoo Finance.
-    *   `holidays`: To determine Japanese holidays for accurate business day calculations.
-    *   `jpx_data_utils`: (Used in some versions of `fetch_stock_data.py` for fetching the list of JPX stock codes; the current version might use direct pandas reading from an Excel file from JPX).
-
-## How to Run
-
-### 1. Fetching Stock Data
-This step is crucial as the analysis relies on locally stored data.
-*   **To fetch/update data for all JPX listed stocks:**
-    Open a terminal or command prompt, navigate to the project's root directory, and run:
+*   macOS/Linuxの場合:
     ```bash
-    python fetch_stock_data.py
+    source venv/bin/activate
     ```
-    The script will attempt to download data for all companies. If run previously, it will perform a differential update for each stock based on the last fetched date (logged in `last_fetch_log.json` if that version of script is used, otherwise it checks data in CSVs).
-*   **To fetch/update data for specific tickers:**
-    You can modify the `fetch_stock_data.py` script. Near the end, in the `if __name__ == "__main__":` block, you can provide a list of tickers:
-    ```python
-    # Example:
-    tickers_to_fetch = ["7203.T", "9984.T"] # Toyota and SoftBank
-    main(specific_tickers=tickers_to_fetch)
-    ```
-    If `tickers_to_fetch` is `None`, it will fetch all stocks.
 
-*   **Data Storage:** Stock data is saved as CSV files in the `stock_data/` directory.
+### 3. 必要なPythonライブラリのインストール
 
-### 2. Running the GUI Application
-To view stock suggestions through the GUI:
+プロジェクトルートにある `requirements.txt` を使用して、必要なライブラリをインストールします。
+
 ```bash
-python stock_suggester_gui.py
+pip install -r requirements.txt
 ```
-The GUI will load, and you can click the "Find Stock Suggestions for Next Business Day" button. It uses the data previously fetched into the `stock_data/` directory. Results will appear in the text area.
 
-### 3. Running the Command-Line Analyzer
-For a command-line version of the suggestions:
+### 4. バックエンドサーバーの起動
+
+Flaskバックエンドサーバーを起動します。
+
 ```bash
-python main_analyzer.py
+python app.py
 ```
-This script will print the analysis and suggestions directly to the console.
 
-### 4. Running Tests
-To ensure the core logic is working as expected:
-```bash
-python -m unittest discover tests
+成功すると、ターミナルに `* Running on http://127.0.0.1:5001/` のようなメッセージが表示されます。サーバーはこのポートでリクエストを待ち受けます。
+
+### 5. フロントエンドの表示
+
+ウェブブラウザで `index.html` ファイルを開きます。
+(例: ファイルシステムから直接 `index.html` をダブルクリックするか、ブラウザのアドレスバーに `file:///path/to/your/project/index.html` のように入力します。)
+
+*   **注意:** `script.js` は `http://localhost:5001` のAPIにアクセスするため、バックエンドサーバー(`app.py`)がステップ4の通り起動している必要があります。
+
+ブラウザでアプリケーションが表示され、デフォルトの銘柄のチャートが読み込まれれば成功です。
+銘柄コード入力欄から新しい銘柄を追加してみてください (例: `GOOGL`, `7203.T` など)。
+
+## プロジェクト構造
+
 ```
-This command will automatically find and run all tests within the `tests/` directory.
+.
+├── app.py             # Flaskバックエンドサーバー
+├── index.html         # フロントエンドHTML
+├── script.js          # フロントエンドJavaScript
+├── style.css          # フロントエンドCSS
+├── requirements.txt   # Python依存ライブラリリスト
+└── README.md          # このファイル
+```
 
-## Interpreting Results
-The suggestions provided by the GUI or command-line analyzer will typically look like this:
+## 今後の改善点 (オプション)
 
-`Ticker: 7203.T, Pattern: Buy on Day 0 (Mon), Sell 4 trading day(s) later, Probability: 0.68, Occurrences: 25`
+*   銘柄コードの入力補助 (例: 日本株の`.T`自動付与)
+*   タブの削除機能
+*   タブの順序変更機能
+*   追加したタブの状態をローカルストレージに保存・復元
+*   チャートの期間変更オプション（例: 1ヶ月, 6ヶ月, 1年）
+*   より高度なチャート機能（移動平均線、出来高チャートなど）
+*   ユーザー認証やデータベース連携（より本格的なアプリケーションの場合）
+*   UIの国際化対応
 
-*   **Ticker:** The stock symbol (e.g., `7203.T` for Toyota Motor Corp.).
-*   **Pattern:** The historical pattern identified.
-    *   "Buy on Day 0 (Mon), Sell 4 trading day(s) later" means the pattern is to buy on Monday and sell 4 trading days after that (which would typically be Friday if there are no intervening holidays).
-    *   Other patterns will specify buy week/month/quarter and holding period.
-*   **Probability:** The historical probability of this pattern resulting in a profitable trade (i.e., sell price > buy price). A probability of 0.68 means it was profitable 68% of the time.
-*   **Occurrences:** The number of times this specific pattern was observed in the historical data for that stock.
+## ライセンス
 
-**Disclaimer:**
-**This tool is for informational and educational purposes only and does NOT constitute financial advice. Stock market investments are subject to market risks. Past performance is not indicative of future results. Always conduct your own thorough research or consult with a qualified financial advisor before making any investment decisions.**
-
-## Future Improvements
-*   **Backtesting Framework:** Implement a more robust backtesting system to evaluate the historical performance of identified patterns with simulated trades, including profit/loss calculation.
-*   **More Sophisticated Pattern Definitions:** Allow for more complex patterns, potentially incorporating volume data, moving averages, or other technical indicators.
-*   **Configuration File:** Move parameters like `MIN_OCCURRENCES`, `MIN_PROBABILITY`, date ranges, and data directory paths into a configuration file (e.g., JSON or YAML) for easier modification.
-*   **Error Logging:** Implement more comprehensive logging to a file, especially for the data fetching process, to better track errors and API issues.
-*   **Improved GUI:** Enhance the GUI with more features like filtering, sorting, plotting historical data for selected stocks, and managing analysis parameters.
-*   **`requirements.txt`:** Generate a `requirements.txt` file for easier dependency management.
-*   **Async Operations:** For the GUI, make the analysis step asynchronous to prevent the UI from freezing during potentially long calculations.
+このプロジェクトは特定のライセンスを設定していません。自由にご利用ください。
+(もし特定のライセンスを適用したい場合は、その情報をここに記載してください。)
+```

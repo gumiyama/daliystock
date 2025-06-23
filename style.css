@@ -1,0 +1,177 @@
+/* style.css の更新案 */
+body {
+    font-family: 'Meiryo UI', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
+    margin: 0;
+    background-color: #f0f2f5; /* 少し明るい背景色 */
+    color: #333;
+    font-size: 14px; /* ベースフォントサイズを少し小さめに */
+}
+
+header {
+    background-color: #c00; /* 楽天のイメージカラー（赤） */
+    color: #fff;
+    padding: 12px 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5em; /* 少し小さく */
+}
+
+.container {
+    width: 95%; /* 少し幅を広げる */
+    max-width: 1600px; /* 最大幅を設定 */
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 8px; /* 角を丸める */
+}
+
+.tab-container {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0; /* 少し柔らかい境界線 */
+    margin-bottom: 20px;
+    overflow-x: auto; /* タブが多くなった場合にスクロール可能に */
+    padding-bottom: 5px; /* スクロールバーとのスペース */
+}
+
+.tab-button {
+    padding: 12px 18px; /* 少しパディング調整 */
+    cursor: pointer;
+    border: none;
+    background-color: transparent; /* 通常時は透明に */
+    border-bottom: 3px solid transparent; /* アクティブ時の下線用スペース */
+    margin-right: 8px;
+    font-size: 0.95em; /* 少し小さく */
+    color: #555;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap; /* タブ名が改行されないように */
+}
+
+.tab-button:hover {
+    background-color: #f5f5f5;
+    color: #c00;
+}
+
+.tab-button.active {
+    color: #c00; /* アクティブなタブの文字色を赤に */
+    border-bottom: 3px solid #c00; /* アクティブなタブの下線を赤に */
+    font-weight: bold;
+}
+
+.content-container {
+    display: flex;
+    flex-wrap: wrap; /* 画面幅が狭い場合に折り返す */
+    gap: 20px;
+}
+
+.chart-area {
+    flex: 1 1 65%; /* 画面幅に応じて伸縮、基本は65% */
+    min-width: 300px; /* 最小幅 */
+    min-height: 450px; /* チャートの高さを少し増やす */
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+#stockChart {
+    width: 100%;
+    height: 100%;
+}
+
+.info-area {
+    flex: 1 1 30%; /* 画面幅に応じて伸縮、基本は30% */
+    min-width: 250px; /* 最小幅 */
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    background-color: #f9f9f9; /* 少し背景色変更 */
+    border-radius: 6px;
+}
+
+.info-area h2 {
+    margin-top: 0;
+    font-size: 1.25em; /* 少し大きく */
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+}
+
+.info-area p {
+    margin: 10px 0; /* 少しマージン調整 */
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.add-stock-area {
+    width: 100%; /* 全幅に */
+    margin-top: 25px;
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
+    background-color: #fdfdfd;
+    border-radius: 0 0 8px 8px; /* コンテナの下部に合わせて角丸 */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-stock-area input[type="text"] {
+    padding: 10px; /* 少し大きく */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95em;
+    flex-grow: 1; /* 入力欄を広げる */
+}
+
+.add-stock-area button {
+    padding: 10px 20px; /* 少し大きく */
+    background-color: #d32f2f; /* 楽天の赤系ボタン */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease;
+}
+
+.add-stock-area button:hover {
+    background-color: #b71c1c; /* ホバー時少し濃く */
+}
+
+.chart-error-message {
+    color: #721c24; /* エラーテキストの色 */
+    background-color: #f8d7da; /* エラー背景色 */
+    border: 1px solid #f5c6cb; /* エラーボーダー色 */
+    padding: 15px;
+    border-radius: 4px;
+    /* margin: 20px;  親要素のpaddingがあるので、ここでは不要かも */
+    text-align: center;
+    font-size: 0.9em;
+}
+
+/* スマホなど狭い画面向けの調整 (オプション) */
+@media (max-width: 768px) {
+    .content-container {
+        flex-direction: column; /* 縦積みに */
+    }
+    .chart-area, .info-area {
+        flex-basis: auto; /* flex-basisを自動に */
+        width: 100%;
+    }
+    .tab-button {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    .add-stock-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .add-stock-area input[type="text"] {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}

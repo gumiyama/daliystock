@@ -1,0 +1,5 @@
+Flask
+yfinance
+pandas
+# numpy is usually a dependency of pandas and yfinance, but explicitly listing it can be good.
+numpy
